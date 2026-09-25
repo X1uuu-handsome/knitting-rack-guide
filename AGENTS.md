@@ -8,4 +8,4 @@ For every effective change to this project, unless the user explicitly says not 
 4. Commit the changes and push `main` to `origin`.
 5. Check the deployment run and verify the live HTTPS site, including the changed feature.
 
-Keep the GitHub repository private unless the user explicitly authorizes making it public. Do not claim a deployment succeeded before checking its run and the live site. The official user entry point is the deployed HTTPS site; the local server is for development and testing.
+The user authorized this repository to be public for free GitHub Pages hosting. Keep it public and use GitHub Pages with GitHub Actions; do not add paid services or another hosting account. Do not claim a deployment succeeded before checking its run and the live site. The official user entry point is the deployed HTTPS site; the local server is for development and testing.
