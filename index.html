@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="编织架安装">
+  <meta name="description" content="18个小步骤，陪你装好移动式编织收纳架。">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-180.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>我的编织架安装助手</title>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="app-header"><div class="header-inner"><span class="brand-mark" aria-hidden="true">✳</span><div><strong>我的编织架</strong><small>安装助手</small></div><button id="menuButton" class="header-link" type="button" aria-label="打开更多页面">更多</button></div></header>
+  <main id="main" tabindex="-1"></main>
+  <nav class="bottom-nav" aria-label="主要导航">
+    <button data-page="home" type="button"><span aria-hidden="true">⌂</span>首页</button>
+    <button data-page="steps" type="button"><span aria-hidden="true">▣</span>步骤</button>
+    <button data-page="parts" type="button"><span aria-hidden="true">☷</span>零件</button>
+    <button data-page="structure" type="button"><span aria-hidden="true">◇</span>结构</button>
+    <button data-page="inspection" type="button"><span aria-hidden="true">✓</span>验收</button>
+  </nav>
+  <dialog id="diagramDialog" class="diagram-dialog" aria-label="放大结构图"><div class="dialog-top"><strong id="diagramTitle">结构图</strong><button id="closeDiagram" class="icon-button" type="button" aria-label="关闭结构图">×</button></div><div id="diagramLarge" class="diagram-large"></div><p class="diagram-hint">可双指缩放页面；也可横向滚动查看图中细节。</p></dialog>
+  <dialog id="resetDialog" class="confirm-dialog" aria-labelledby="resetTitle"><h2 id="resetTitle">确定重置全部进度？</h2><p>会清除当前步骤、已完成步骤、零件收货和验收勾选。此操作无法撤销。</p><div class="confirm-actions"><button id="cancelReset" class="subtle-button" type="button">取消</button><button id="confirmReset" class="danger-button" type="button">确认重置</button></div></dialog>
+  <dialog id="moreDialog" class="more-dialog" aria-label="更多页面"><div class="dialog-top"><strong>更多页面</strong><button id="closeMore" class="icon-button" type="button" aria-label="关闭更多页面">×</button></div><div class="more-links"><button type="button" data-go="glossary">认识零件 →</button><button type="button" data-go="mistakes">常见错误 →</button><button type="button" data-go="settings">进度设置 →</button></div></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

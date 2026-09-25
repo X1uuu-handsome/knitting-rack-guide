@@ -1,0 +1,53 @@
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { dimensions as d, partGroups, steps, inspection, pendingDetails } from '../data.js';
+import { diagramFor } from '../diagrams.js';
+
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const part=id=>partGroups.flatMap(group=>group.items).find(item=>item.id===id);
+assert.equal(steps.length,18,'must contain all 18 steps');
+assert.equal(new Set(steps.map(step=>step.title)).size,18,'step titles must be unique');
+assert.equal(part('C').qty,9,'nine cross clamps');
+assert.equal(part('D').qty,4,'four T clamps');
+assert.equal(part('I').qty,3,'three yarn guides');
+assert.match(part('I').spec,/90mm/);
+assert.equal(part('E').qty,4);
+assert.equal(part('F').qty,4);
+assert.equal(['A2','A3','B1','B2','B3'].length,5,'five 300mm shafts');
+assert.equal(d.baseFrontBack-d.baseSide,54,'side shaft offset');
+assert.equal(d.topBars[0]-d.topBars[1]-d.shaftDiameter,d.barGapMin,'top bar clear gap');
+assert.ok(d.topBars[1]-d.shaftDiameter/2-d.ipadTopMax>=d.ipadGapMin,'iPad clear gap');
+assert.ok(d.ipadTopMax<=d.ipadTopCeiling,'iPad ceiling');
+assert.deepEqual(d.yarnGuides,{count:3,innerDiameter:90,groupHeightMin:300,groupHeightMax:350,preferredSameLevel:true,maxVerticalOffset:20,layout:'three-directions'});
+assert.equal(steps[16].title,'把3个9cm导线环装成一组');
+assert.ok(steps[16].checks.some(x=>x.includes('互不碰撞')));
+assert.equal(pendingDetails.padStack.status,'pending_real_part');
+assert.equal(pendingDetails.ipadMount.status,'pending_real_part');
+
+const base=diagramFor('base');
+assert.match(base,/x1="195" y1="84" x2="195" y2="274"/,'center beam stays on x=195');
+assert.match(base,/x1="96" y1="84" x2="96" y2="274"/);
+assert.match(base,/x1="294" y1="84" x2="294" y2="274"/);
+const top=diagramFor('guides');
+assert.equal((top.match(/class="guide-ring hot"/g)||[]).length,3,'three top-view rings');
+assert.match(top,/cx="80" cy="198"/);
+assert.match(top,/cx="195" cy="78"/);
+assert.match(top,/cx="310" cy="198"/);
+assert.match(top,/内径 90mm/);
+assert.equal((diagramFor('final').match(/class="guide-ring/g)||[]).length,3,'three front-view rings');
+assert.equal((diagramFor('side').match(/class="guide-ring/g)||[]).length,3,'three side-view rings');
+for(const [index,step] of steps.entries())assert.match(diagramFor(step.diagram),/^<svg[\s\S]*<\/svg>$/,`step ${index+1} SVG`);
+assert.ok(inspection.length>=14);
+
+const checkedFiles=['index.html','styles.css','app.js','data.js','diagrams.js','README.md'];
+for(const name of checkedFiles){
+  const source=readFileSync(resolve(root,name),'utf8');
+  assert.doesNotMatch(source,/(?:25|32|39)\s*cm|40\s*[～~\-]\s*60\s*mm/,'old guide layout or diameter: '+name);
+}
+const manifest=JSON.parse(readFileSync(resolve(root,'manifest.json'),'utf8'));
+assert.equal(manifest.display,'standalone');
+for(const icon of manifest.icons)assert.ok(existsSync(resolve(root,icon.src)),'icon exists: '+icon.src);
+for(const name of ['index.html','styles.css','app.js','data.js','diagrams.js','manifest.json','sw.js'])assert.ok(existsSync(resolve(root,name)));
+console.log('PASS: 18 steps, part totals, clearances, grouped 90mm guide SVGs, PWA files, no old guide layout.');
