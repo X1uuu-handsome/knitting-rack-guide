@@ -95,6 +95,6 @@ dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
 resetDialog.addEventListener('click',e=>{if(e.target===resetDialog)resetDialog.close();});
 moreDialog.addEventListener('click',e=>{if(e.target===moreDialog)moreDialog.close();});
 window.addEventListener('hashchange',render);
-if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register(`./sw.js?v=${encodeURIComponent(globalThis.RACK_RELEASE.version)}`,{scope:'./',updateViaCache:'none'}).then(registration=>registration.update()).catch(()=>showToast('离线缓存暂时未启用。'));
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register(`./sw.js?v=${encodeURIComponent(globalThis.RACK_RELEASE.version)}`,{scope:'./',updateViaCache:'none'}).then(registration=>registration.update().catch(()=>{})).catch(()=>showToast('离线缓存暂时未启用。'));
 if(!location.hash)history.replaceState(null,'','#home');
 render();
