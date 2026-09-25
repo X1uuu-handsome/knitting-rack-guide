@@ -5,7 +5,7 @@
 ## 正式使用
 
 - 源码仓库：[X1uuu-handsome/knitting-rack-guide](https://github.com/X1uuu-handsome/knitting-rack-guide)（private）。
-- 正式 HTTPS 地址：部署启用并验证后填写。本地服务器只用于开发调试。
+- 正式 HTTPS 地址：Cloudflare Pages 连接私有仓库并验证后填写。本地服务器只用于开发调试。
 - iPhone：用 Safari 打开正式网址 → 点“分享” → “添加到主屏幕” → 以后直接从桌面图标进入。
 
 后续发布流程：修改代码 → 本地测试 → `git diff` 检查 → commit → `git push origin main` → GitHub Actions 自动部署 → 验证线上页面。每次有效更新同时修改 `version-config.js` 的版本与更新日期；设置页显示此信息，Service Worker 也用它命名缓存。
@@ -30,7 +30,8 @@ python -m http.server 8000
 | `diagrams.js` | 原生 SVG 结构图生成器 |
 | `app.js` | 页面渲染、导航与 localStorage |
 | `manifest.json`, `sw.js`, `version-config.js` | PWA 安装、更新版本与离线缓存 |
-| `.github/workflows/pages.yml` | 推送 main 后自动部署 GitHub Pages |
+| `.github/workflows/pages.yml` | 每次推送运行检查；启用 Pages 变量后自动部署 GitHub Pages |
+| `scripts/prepare-site.mjs` | 无依赖地把站点文件整理到 `_site/` |
 | `assets/icons/` | 本地 SVG / PNG 图标 |
 | `assets/photos/` | 到货后放真实照片的位置 |
 | `scripts/generate_icons.py` | 用 Python 标准库生成 PNG 图标 |
@@ -45,7 +46,7 @@ python -m http.server 8000
 
 ## 部署与 iPhone 使用
 
-GitHub Pages 工作流会把静态文件打包为站点工件，由 GitHub Actions 自动部署，无需手工上传。官方文档说明：[GitHub Free 的 Pages 要求公开仓库](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)；本仓库保持 private，不会擅自改为 public。若当前账户不能使用 private Pages，需改用可用的免费静态托管方案。首次联网打开正式 HTTPS 地址并等待资源缓存后，基础内容可离线查看。进度存在当前设备浏览器的 `localStorage`；清理 Safari 网站数据会清除进度。
+GitHub Actions 工作流每次推送运行检查，并保留官方 Pages 部署步骤。当前账户对 private 仓库启用 Pages 返回“不支持当前方案”；按[官方方案说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)，GitHub Free 的 Pages 要求公开仓库。本仓库保持 private，因此 Pages 部署步骤默认跳过；只有将仓库变量 `ENABLE_GITHUB_PAGES` 设为 `true` 后才会运行。备用正式发布方式是 [Cloudflare Pages Git 集成](https://developers.cloudflare.com/pages/get-started/git-integration/)，它支持 private GitHub 仓库及每次 push 自动部署。Cloudflare 的构建命令为 `node scripts/prepare-site.mjs`，输出目录为 `_site`，生产分支为 `main`。首次联网打开正式 HTTPS 地址并等待资源缓存后，基础内容可离线查看。进度存在当前设备浏览器的 `localStorage`；清理 Safari 网站数据会清除进度。
 
 ## 装配重点
 

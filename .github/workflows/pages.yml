@@ -15,7 +15,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Check installation data and assets
+        run: node scripts/check.mjs
+      - name: Prepare static site
+        run: node scripts/prepare-site.mjs
+
   deploy:
+    if: ${{ vars.ENABLE_GITHUB_PAGES == 'true' }}
+    needs: verify
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -23,13 +35,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Check installation data and assets
-        run: node scripts/check.mjs
       - name: Prepare static site
-        run: |
-          mkdir -p _site/assets/icons
-          cp index.html styles.css app.js data.js diagrams.js version-config.js manifest.json sw.js _site/
-          cp assets/icons/* _site/assets/icons/
+        run: node scripts/prepare-site.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
