@@ -2,6 +2,14 @@
 
 手机优先的纯静态 PWA，按 18 个小步骤组装移动式编织收纳架。包含零件清单、结构 SVG、零件说明、常见错误、最终验收和本机进度保存。没有账号、服务器、数据库、付费服务或外部运行依赖。
 
+## 正式使用
+
+- 源码仓库：[X1uuu-handsome/knitting-rack-guide](https://github.com/X1uuu-handsome/knitting-rack-guide)（private）。
+- 正式 HTTPS 地址：部署启用并验证后填写。本地服务器只用于开发调试。
+- iPhone：用 Safari 打开正式网址 → 点“分享” → “添加到主屏幕” → 以后直接从桌面图标进入。
+
+后续发布流程：修改代码 → 本地测试 → `git diff` 检查 → commit → `git push origin main` → GitHub Actions 自动部署 → 验证线上页面。每次有效更新同时修改 `version-config.js` 的版本与更新日期；设置页显示此信息，Service Worker 也用它命名缓存。
+
 ## 本地打开
 
 请通过本地 HTTP 服务打开；部分浏览器会阻止 `file://` 加载 JavaScript 模块，且不能在 `file://` 注册 Service Worker。在项目目录运行：
@@ -21,7 +29,8 @@ python -m http.server 8000
 | `data.js` | 尺寸、零件、18 步、验收、说明与错误数据 |
 | `diagrams.js` | 原生 SVG 结构图生成器 |
 | `app.js` | 页面渲染、导航与 localStorage |
-| `manifest.json`, `sw.js` | PWA 安装与基础离线缓存 |
+| `manifest.json`, `sw.js`, `version-config.js` | PWA 安装、更新版本与离线缓存 |
+| `.github/workflows/pages.yml` | 推送 main 后自动部署 GitHub Pages |
 | `assets/icons/` | 本地 SVG / PNG 图标 |
 | `assets/photos/` | 到货后放真实照片的位置 |
 | `scripts/generate_icons.py` | 用 Python 标准库生成 PNG 图标 |
@@ -36,7 +45,7 @@ python -m http.server 8000
 
 ## 部署与 iPhone 使用
 
-把这些文件原样部署到 [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages) 或 [Cloudflare Pages](https://developers.cloudflare.com/pages/platform/limits/)，无需构建命令。GitHub Free 使用 Pages 时仓库需公开；Cloudflare Pages 提供 Free 计划。此处尚未创建远程仓库或公开项目。打开 HTTPS 地址后，iPhone Safari 点击“分享”→“添加到主屏幕”。首次联网打开并等待页面资源缓存后，基础内容可离线查看。进度存在当前设备浏览器的 `localStorage`；清理 Safari 网站数据会清除进度。
+GitHub Pages 工作流会把静态文件打包为站点工件，由 GitHub Actions 自动部署，无需手工上传。官方文档说明：[GitHub Free 的 Pages 要求公开仓库](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)；本仓库保持 private，不会擅自改为 public。若当前账户不能使用 private Pages，需改用可用的免费静态托管方案。首次联网打开正式 HTTPS 地址并等待资源缓存后，基础内容可离线查看。进度存在当前设备浏览器的 `localStorage`；清理 Safari 网站数据会清除进度。
 
 ## 装配重点
 

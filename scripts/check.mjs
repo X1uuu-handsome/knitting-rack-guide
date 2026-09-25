@@ -48,6 +48,18 @@ for(const name of checkedFiles){
 }
 const manifest=JSON.parse(readFileSync(resolve(root,'manifest.json'),'utf8'));
 assert.equal(manifest.display,'standalone');
+assert.equal(manifest.start_url,'./');
+assert.equal(manifest.scope,'./');
 for(const icon of manifest.icons)assert.ok(existsSync(resolve(root,icon.src)),'icon exists: '+icon.src);
-for(const name of ['index.html','styles.css','app.js','data.js','diagrams.js','manifest.json','sw.js'])assert.ok(existsSync(resolve(root,name)));
-console.log('PASS: 18 steps, part totals, clearances, grouped 90mm guide SVGs, PWA files, no old guide layout.');
+for(const name of ['index.html','styles.css','app.js','data.js','diagrams.js','version-config.js','manifest.json','sw.js','.github/workflows/pages.yml'])assert.ok(existsSync(resolve(root,name)));
+const html=readFileSync(resolve(root,'index.html'),'utf8');
+assert.doesNotMatch(html,/(?:src|href)="\/(?!\/)/,'no site-root asset URLs');
+assert.match(html,/src="\.\/version-config\.js"/);
+const worker=readFileSync(resolve(root,'sw.js'),'utf8');
+assert.match(worker,/importScripts\('\.\/version-config\.js'\)/);
+assert.match(worker,/self\.clients\.claim\(\)/);
+assert.match(worker,/self\.skipWaiting\(\)/);
+const workflow=readFileSync(resolve(root,'.github/workflows/pages.yml'),'utf8');
+for(const action of ['actions/checkout@v6','actions/configure-pages@v5','actions/upload-pages-artifact@v4','actions/deploy-pages@v4'])assert.ok(workflow.includes(action),`missing ${action}`);
+for(const permission of ['contents: read','pages: write','id-token: write'])assert.ok(workflow.includes(permission),`missing ${permission}`);
+console.log('PASS: 18 steps, quantities, clearances, grouped 90mm guide SVGs, project-path PWA assets, Pages workflow.');
