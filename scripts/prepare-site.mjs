@@ -13,4 +13,5 @@ for(const name of ['index.html','styles.css','app.js','data.js','diagrams.js','v
 for(const name of readdirSync(resolve(root,'assets','icons'))){
   cpSync(resolve(root,'assets','icons',name),resolve(output,'assets','icons',name));
 }
+cpSync(resolve(root,'assets','photos'),resolve(output,'assets','photos'),{recursive:true});
 console.log('Prepared static site at _site/');
